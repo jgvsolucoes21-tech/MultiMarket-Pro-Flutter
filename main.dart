@@ -14,7 +14,6 @@ Future<void> main() async {
   );
   runApp(const MyApp());
 }
-
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -29,7 +28,6 @@ class MyApp extends StatelessWidget {
             foregroundColor: Colors.green,
           ),
         ),
-        
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             foregroundColor: Colors.white,
@@ -37,7 +35,6 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      
       initialRoute: '/',
       routes: <String, WidgetBuilder>{
         '/': (_) => const SplashPage(),
