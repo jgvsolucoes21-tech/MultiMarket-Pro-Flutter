@@ -37,6 +37,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
+      
       initialRoute: '/',
       routes: <String, WidgetBuilder>{
         '/': (_) => const SplashPage(),
