@@ -17,6 +17,12 @@ jobs:
           flutter-version: '3.13.0'
           channel: 'stable'
       
+      - name: Reorganize project structure
+        run: |
+          mkdir -p lib
+          mv main.dart login_page.dart account_page.dart splash_page.dart avatar.dart constants.dart lib/ || true
+          ls -la lib/
+      
       - name: Get dependencies
         run: flutter pub get
       
