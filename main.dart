@@ -9,8 +9,8 @@ Future<void> main() async {
 
   await Supabase.initialize(
     // TODO: Replace credentials with your own
-    url: '[YOUR_SUPABASE_URL]',
-    anonKey: '[YOUR_SUPABASE_ANNON_KEY]',
+    url: '[https://tu-proyecto.supabase.co]',
+    anonKey: '[eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9]',
   );
   runApp(const MyApp());
 }
