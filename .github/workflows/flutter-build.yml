@@ -17,19 +17,30 @@ jobs:
           flutter-version: '3.13.0'
           channel: 'stable'
       
-      - name: Reorganize project structure
+      - name: Create project structure
         run: |
-          mkdir -p lib
-          mv main.dart login_page.dart account_page.dart splash_page.dart avatar.dart constants.dart lib/ || true
-          ls -la lib/
+          flutter create --org com.jgvsolutions --project-name multimarket_pro flutter_app
+          cd flutter_app
+          
+          # Copy your dart files
+          cp ../main.dart lib/
+          cp ../login_page.dart lib/
+          cp ../account_page.dart lib/
+          cp ../splash_page.dart lib/
+          cp ../avatar.dart lib/
+          cp ../constants.dart lib/
+          cp ../pubspec.yaml .
+          
+          cd ..
+          cp -r flutter_app/* .
       
       - name: Get dependencies
         run: flutter pub get
       
-      - name: Build APK (Release)
+      - name: Build APK
         run: flutter build apk --release
       
-      - name: Upload APK artifact
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-release.apk
