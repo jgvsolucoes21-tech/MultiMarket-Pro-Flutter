@@ -17,22 +17,21 @@ jobs:
           flutter-version: '3.13.0'
           channel: 'stable'
       
-      - name: Create project structure
+      - name: Create Flutter project
         run: |
-          flutter create --org com.jgvsolutions --project-name multimarket_pro flutter_app
-          cd flutter_app
-          
-          # Copy your dart files
-          cp ../main.dart lib/
-          cp ../login_page.dart lib/
-          cp ../account_page.dart lib/
-          cp ../splash_page.dart lib/
-          cp ../avatar.dart lib/
-          cp ../constants.dart lib/
+          flutter create --org com.jgvsolutions --project-name multimarket_pro new_app
+          cd new_app
+          mkdir -p lib/pages
+          cp ../main.dart lib/main.dart
+          cp ../login_page.dart lib/pages/
+          cp ../account_page.dart lib/pages/
+          cp ../splash_page.dart lib/pages/
+          cp ../avatar.dart lib/pages/
+          cp ../constants.dart lib/pages/
           cp ../pubspec.yaml .
-          
           cd ..
-          cp -r flutter_app/* .
+          cp -r new_app/* .
+          rm -rf new_app
       
       - name: Get dependencies
         run: flutter pub get
