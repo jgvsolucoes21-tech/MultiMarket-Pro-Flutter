@@ -1,0 +1,33 @@
+{
+  "name": "multimarket-pro",
+  "version": "1.0.0",
+  "description": "MultiMarket Pro - Supabase React Native App",
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "eject": "expo eject"
+  },
+  "dependencies": {
+    "@react-navigation/bottom-tabs": "^6.5.11",
+    "@react-navigation/native": "^6.1.9",
+    "@supabase/supabase-js": "^2.38.0",
+    "expo": "~51.0.0",
+    "expo-image-picker": "~14.7.1",
+    "expo-secure-store": "~13.0.0",
+    "expo-status-bar": "~1.12.1",
+    "react": "18.2.0",
+    "react-native": "0.74.1",
+    "react-native-gesture-handler": "^2.16.1",
+    "react-native-safe-area-context": "^4.10.1",
+    "react-native-screens": "^3.31.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.45",
+    "@types/react-native": "^0.72.8",
+    "typescript": "^5.3.3"
+  },
+  "private": true
+}
