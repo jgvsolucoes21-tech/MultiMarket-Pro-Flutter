@@ -10,39 +10,36 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      - name: Setup Java
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-      
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
+      
+      - name: Install EAS CLI
+        run: npm install -g eas-cli
       
       - name: Install dependencies
         run: |
           cd react-native-app
           npm install --legacy-peer-deps
       
-      - name: Build with Expo
+      - name: Build APK with EAS
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-          CI: 1
         run: |
           cd react-native-app
-          npx expo@latest prebuild --platform android --clean
+          eas build --platform android --non-interactive --wait
       
-      - name: Build APK with Gradle
+      - name: Download APK
         run: |
-          cd react-native-app/android
-          chmod +x gradlew
-          ./gradlew assembleRelease
+          cd react-native-app
+          eas build:list --limit 1 --platform android --json > build.json
+          BUILD_ID=$(jq -r '.[0].id' build.json)
+          eas build:download --id $BUILD_ID --path ./app-release.apk || true
       
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-release.apk
-          path: react-native-app/android/app/build/outputs/apk/release/app-release.apk
+          path: react-native-app/app-release.apk
           if-no-files-found: warn
