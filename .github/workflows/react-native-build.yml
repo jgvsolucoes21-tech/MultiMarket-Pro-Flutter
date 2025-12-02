@@ -10,6 +10,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+      
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
@@ -20,29 +26,26 @@ jobs:
           cd react-native-app
           npm install --legacy-peer-deps
       
-      - name: Install Expo CLI
-        run: npm install -g expo-cli
+      - name: Install Expo CLI (new)
+        run: npm install -g expo@latest
       
-      - name: Login to Expo
+      - name: Prebuild Android
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: |
-          echo "Logging in to Expo..."
-          echo $EXPO_TOKEN | expo login --non-interactive --username ${{ secrets.EXPO_USERNAME }}
-      
-      - name: Prebuild Android
-        run: |
           cd react-native-app
-          npx expo prebuild --platform android --clean
+          npx expo prebuild --platform android --clean --non-interactive
       
-      - name: Build APK
+      - name: Build APK with Gradle
         run: |
           cd react-native-app/android
+          chmod +x gradlew
           ./gradlew assembleRelease
       
       - name: Upload APK
         uses: actions/upload-artifact@v4
-        if: success()
+        if: always()
         with:
           name: app-release.apk
           path: react-native-app/android/app/build/outputs/apk/release/app-release.apk
+          if-no-files-found: warn
