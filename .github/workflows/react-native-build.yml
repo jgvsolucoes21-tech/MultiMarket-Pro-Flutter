@@ -15,31 +15,45 @@ jobs:
         with:
           node-version: '18'
       
+      - name: Debug - Check token exists
+        run: |
+          if [ -z "${{ secrets.EXPO_TOKEN }}" ]; then
+            echo "ERROR: EXPO_TOKEN secret not found!"
+            exit 1
+          else
+            echo "✓ EXPO_TOKEN is configured"
+            echo "Token length: ${#EXPO_TOKEN}"
+          fi
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+      
       - name: Install dependencies
         run: |
           cd react-native-app
           npm install --legacy-peer-deps
       
       - name: Install EAS CLI
-        run: npm install -g eas-cli
+        run: npm install -g eas-cli@latest
       
-      - name: Login to Expo
+      - name: Configure EAS authentication
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: |
-          echo "Verifying EAS access..."
-          eas whoami
+          mkdir -p ~/.eas
+          echo $EXPO_TOKEN > ~/.eas/cli-credentials
+          chmod 600 ~/.eas/cli-credentials
       
       - name: Build APK with EAS
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: |
           cd react-native-app
-          eas build --platform android --non-interactive
+          eas build --platform android --non-interactive --wait
       
-      - name: Upload APK to artifacts
+      - name: Upload APK
         uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: app-release.apk
-          path: react-native-app/android/app/build/outputs/apk/release/app-release.apk
+          name: app-release
+          path: react-native-app/android/app/build/outputs/apk/release/
           if-no-files-found: warn
