@@ -15,31 +15,31 @@ jobs:
         with:
           node-version: '18'
       
-      - name: Install EAS CLI
-        run: npm install -g eas-cli
-      
       - name: Install dependencies
         run: |
           cd react-native-app
           npm install --legacy-peer-deps
+      
+      - name: Install EAS CLI
+        run: npm install -g eas-cli
+      
+      - name: Login to Expo
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          echo "Verifying EAS access..."
+          eas whoami
       
       - name: Build APK with EAS
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: |
           cd react-native-app
-          eas build --platform android --non-interactive --wait
+          eas build --platform android --non-interactive
       
-      - name: Download APK
-        run: |
-          cd react-native-app
-          eas build:list --limit 1 --platform android --json > build.json
-          BUILD_ID=$(jq -r '.[0].id' build.json)
-          eas build:download --id $BUILD_ID --path ./app-release.apk || true
-      
-      - name: Upload APK
+      - name: Upload APK to artifacts
         uses: actions/upload-artifact@v4
         with:
           name: app-release.apk
-          path: react-native-app/app-release.apk
+          path: react-native-app/android/app/build/outputs/apk/release/app-release.apk
           if-no-files-found: warn
