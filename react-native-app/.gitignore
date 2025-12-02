@@ -1,16 +1,4 @@
-# Environment variables
-.env
-.env.local
-.env.*.local
-
-# Dependencies
 node_modules/
-.yarn/cache
-.yarn/unplugged
-.yarn/build-state.yml
-.yarn/install-state.gz
-
-# Expo
 .expo/
 dist/
 npm-debug.*
@@ -20,34 +8,15 @@ npm-debug.*
 *.key
 *.mobileprovision
 *.orig.*
-
-# Android
-android/app/debug
-android/app/release
-android/app/build
+.env
+.env.local
+android/app/build/
 android/.gradle
-android/gradle.properties
-
-# iOS
-ios/Pods
-build/
-
-# Misc
-.DS_Store
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# Logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Build outputs
 build/
 dist/
 *.apk
 *.aab
+.DS_Store
+.vscode/
+.idea/
+*.log
