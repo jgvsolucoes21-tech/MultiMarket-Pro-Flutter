@@ -20,19 +20,17 @@ jobs:
           cd react-native-app
           npm install --legacy-peer-deps
       
-      - name: Setup EAS CLI
-        run: |
-          npm install -g eas-cli
-      
-      - name: Build APK with EAS
+      - name: Build APK with Expo
         env:
-          EAS_NO_VCS_WARNING: 1
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: |
           cd react-native-app
+          npm install -g eas-cli
           eas build --platform android --non-interactive --wait
       
       - name: Upload APK
         uses: actions/upload-artifact@v4
+        if: success()
         with:
           name: app-release.apk
           path: react-native-app/dist/**/*.apk
