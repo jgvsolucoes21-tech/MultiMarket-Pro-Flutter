@@ -13,7 +13,7 @@ extension ShowSnackBar on BuildContext {
       backgroundColor: backgroundColor,
     ));
   }
-
+ 
   void showErrorSnackBar({required String message}) {
     showSnackBar(message: message, backgroundColor: Colors.red);
   }
