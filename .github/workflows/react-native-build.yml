@@ -1,0 +1,39 @@
+name: React Native Build APK
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      
+      - name: Install dependencies in react-native-app
+        run: |
+          cd react-native-app
+          npm install --legacy-peer-deps
+      
+      - name: Setup EAS CLI
+        run: |
+          npm install -g eas-cli
+      
+      - name: Build APK with EAS
+        env:
+          EAS_NO_VCS_WARNING: 1
+        run: |
+          cd react-native-app
+          eas build --platform android --non-interactive --wait
+      
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release.apk
+          path: react-native-app/dist/**/*.apk
+          if-no-files-found: ignore
