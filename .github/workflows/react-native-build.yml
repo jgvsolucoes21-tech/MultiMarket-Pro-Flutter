@@ -26,15 +26,13 @@ jobs:
           cd react-native-app
           npm install --legacy-peer-deps
       
-      - name: Install Expo CLI (new)
-        run: npm install -g expo@latest
-      
-      - name: Prebuild Android
+      - name: Build with Expo
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          CI: 1
         run: |
           cd react-native-app
-          npx expo prebuild --platform android --clean --non-interactive
+          npx expo@latest prebuild --platform android --clean
       
       - name: Build APK with Gradle
         run: |
@@ -44,7 +42,6 @@ jobs:
       
       - name: Upload APK
         uses: actions/upload-artifact@v4
-        if: always()
         with:
           name: app-release.apk
           path: react-native-app/android/app/build/outputs/apk/release/app-release.apk
