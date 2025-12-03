@@ -1,22 +1,10 @@
 {
   "build": {
-    "preview": {
-      "android": {
-        "gradleCommand": ":app:assembleRelease",
-        "cache": {
-          "disabled": false
-        }
-      }
-    },
     "production": {
       "android": {
         "gradleCommand": ":app:assembleRelease",
-        "cache": {
-          "disabled": false
-        },
         "env": {
           "NODE_OPTIONS": "--max-old-space-size=8192",
-          "ANDROID_JAVA_HOME": "/usr/lib/jvm/java-11-openjdk-amd64",
           "JAVA_OPTS": "-Xms512m -Xmx8192m -XX:+HeapDumpOnOutOfMemoryError"
         }
       }
