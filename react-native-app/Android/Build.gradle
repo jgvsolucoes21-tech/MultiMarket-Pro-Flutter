@@ -1,3 +1,6 @@
+plugins {
+    id 'org.jetbrains.kotlin.android' version '1.9.0' apply false   // o la versión que uses
+}
 buildscript {
   ext {
     buildToolsVersion = "35.0.0"
