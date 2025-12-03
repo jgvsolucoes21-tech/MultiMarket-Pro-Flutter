@@ -13,6 +13,7 @@
       "android": {
         "gradleCommand": ":app:assembleRelease",
         "env": {
+          {
           "NODE_OPTIONS": "--max-old-space-size=8192",
           "JAVA_OPTS": "-Xms512m -Xmx8192m"
         }
