@@ -1,0 +1,74 @@
+// android/app/build.gradle  ← versión corregida y optimizada 2025
+
+apply plugin: "com.android.application"
+apply plugin: "com.facebook.react"
+
+// ← Esta línea soluciona todos los warnings de "namespace deprecated"
+android {
+    namespace "com.jgvsolucoes.multimarket"
+
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    ndkVersion rootProject.ext.ndkVersion
+
+    defaultConfig {
+        applicationId "com.jgvsolucoes.multimarket"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "1.0.0"
+    }
+
+    signingConfigs {
+        debug {
+            storeFile file('debug.keystore')
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+        }
+    }
+
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+        }
+        release {
+            // Cambia a tu signingConfig real cuando subas a Play Store
+            signingConfig signingConfigs.debug
+            minifyEnabled false
+            // proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+        }
+    }
+
+    // Compatibilidad con React Native / Expo
+    packagingOptions {
+        pickFirsts += [
+            'lib/x86/libc++_shared.so',
+            'lib/x86_64/libc++_shared.so',
+            'lib/arm64-v8a/libc++_shared.so',
+            'lib/armeabi-v7a/libc++_shared.so'
+        ]
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    implementation 'com.google.android.material:material:1.9.0'
+
+    // React Native y Expo ya los inyecta automáticamente, no hace falta más aquí
+}
+
+// Esta línea es importante para que funcione con Expo EAS Build
+react {
+    // (en proyectos gestionados por Expo normalmente no hace falta nada aquí)
+}
