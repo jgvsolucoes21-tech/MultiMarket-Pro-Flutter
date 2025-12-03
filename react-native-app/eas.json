@@ -1,13 +1,21 @@
 {
   "build": {
-    "production": {
-      "node": "20",
-      "env": {
-        "NODE_OPTIONS": "--max-old-space-size=8192",
-        "JAVA_OPTS": "-Xmx8192m -XX:MaxMetaspaceSize=1024m"
-      },
+    "preview": {
       "android": {
-        "gradleCommand": ":app:assembleRelease"
+        "gradleCommand": ":app:assembleRelease",
+        "env": {
+          "NODE_OPTIONS": "--max-old-space-size=8192",
+          "JAVA_OPTS": "-Xmx8192m"
+        }
+      }
+    },
+    "production": {
+      "android": {
+        "gradleCommand": ":app:assembleRelease",
+        "env": {
+          "NODE_OPTIONS": "--max-old-space-size=8192",
+          "JAVA_OPTS": "-Xmx8192m"
+        }
       }
     }
   }
