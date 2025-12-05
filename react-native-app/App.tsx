@@ -7,7 +7,7 @@ import { supabase } from './supabaseClient'
 import { COLORS } from './constants'
 import { User } from '@supabase/supabase-js'
 
-// Screens 
+// Screens  
 import LoginScreen from './screens/LoginScreen'
 import SignupScreen from './screens/SignupScreen'
 import HomeScreen from './screens/HomeScreen'
