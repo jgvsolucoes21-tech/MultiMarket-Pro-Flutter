@@ -8,9 +8,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: react-native-app
 
     steps:
       - name: Checkout código
@@ -22,16 +19,13 @@ jobs:
           node-version: 20
 
       - name: Instalar dependencias
-        run: npm install
-
-      # ← CACHE DE GRADLE DESACTIVADO (así nunca más sale el error de comas)
-      # - name: Cache Gradle
-      #   uses: actions/cache@v4
-      #   ...
+        run: |
+          cd react-native-app
+          npm install
 
       - name: Generar AAB de producción
         run: |
-          cd android
+          cd react-native-app/android
           chmod +x ./gradlew
           ./gradlew bundleRelease --no-daemon
 
@@ -42,4 +36,4 @@ jobs:
           path: react-native-app/android/app/build/outputs/bundle/release/app-release.aab
 
       - name: ¡ÉXITO TOTAL!
-        run: echo "¡AAB GENERADO! Descárgalo de la sección Artifacts arriba"
+        run: echo "¡AAB LISTO! Descárgalo desde Artifacts arriba"
