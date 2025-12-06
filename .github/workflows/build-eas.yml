@@ -20,21 +20,22 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          # cache desactivado → más simple, más estable, cero dramas
 
       - name: Instalar Expo y EAS CLI
         run: npm install -g expo-cli eas-cli
 
-      - name: Instalar dependencias (modo definitivo)
+      - name: Instalar dependencias
         run: |
           rm -f package-lock.json
           npm install
 
       - name: Login Expo / EAS
-        run: eas login --token ${{ secrets.EXPO_TOKEN }}
+        run: eas login --non-interactive
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
 
       - name: Build Android AAB
         run: eas build --platform android --profile production --non-interactive --no-wait
 
-      - name: ¡GANAMOS!
-        run: echo "Build lanzado. Andá a festejar, campeón."
+      - name: ¡TERMINAMOS!
+        run: echo "Build lanzado. Andá a dormir tranquilo, crack."
