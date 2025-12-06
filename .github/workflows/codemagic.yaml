@@ -5,7 +5,7 @@ workflows:
     instance_type: mac_mini_m1
     environment:
       vars:
-        PACKAGE_NAME: "com.jgvsoluciones.multimarketpro"  # ← Cambiá esto por tu package real si es diferente
+        PACKAGE_NAME: "com.multimarketpro"  # ← Cambiá esto por tu package real si es diferente
       node: latest
     triggering:
       events:
