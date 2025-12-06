@@ -25,7 +25,7 @@ jobs:
 
       - name: Generar AAB de producción
         run: |
-          cd react-native-app/android
+          cd react-native-app/Android   # ← A mayúscula, como en tu repo
           chmod +x ./gradlew
           ./gradlew bundleRelease --no-daemon
 
@@ -33,7 +33,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: MultiMarket-Pro-aab
-          path: react-native-app/android/app/build/outputs/bundle/release/app-release.aab
+          path: react-native-app/Android/app/build/outputs/bundle/release/app-release.aab
 
       - name: ¡ÉXITO TOTAL!
         run: echo "¡AAB LISTO! Descárgalo desde Artifacts arriba"
