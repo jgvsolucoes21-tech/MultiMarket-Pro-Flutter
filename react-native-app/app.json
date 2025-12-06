@@ -3,7 +3,16 @@
     "name": "MultiMarket Pro",
     "slug": "multimarket-pro",
     "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "multimarketpro",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "assetBundlePatterns": ["**/*"],
     "jsEngine": "hermes",
+    "ios": {
+      "supportsTabletMode": true,
+      "bundleIdentifier": "com.jgvsolucoes.multimarket"
+    },
     "android": {
       "package": "com.jgvsolucoes.multimarket",
       "jsEngine": "hermes",
@@ -14,6 +23,15 @@
         "android.permission.RECORD_AUDIO"
       ]
     },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Necesitamos acceso a tus fotos",
+          "cameraPermission": "Necesitamos acceso a tu cámara"
+        }
+      ]
+    ],
     "extra": {
       "eas": {
         "projectId": "6de02ef8-5f37-4d45-9800-17bf6409efb3"
