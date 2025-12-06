@@ -23,11 +23,19 @@ jobs:
           cache: 'npm'
           cache-dependency-path: react-native-app/package-lock.json
 
-      - name: Instalar Expo y EAS CLI (global)
+      - name: Instalar Expo y EAS CLI
         run: npm install -g expo-cli eas-cli
 
-      - name: Instalar dependencias del proyecto
-        run: npm ci
+      - name: Asegurar package-lock.json + instalar dependencias
+        run: |
+          if [ -f package-lock.json ]; then
+            echo "package-lock.json encontrado → npm ci"
+            npm ci
+          else
+            echo "package-lock.json NO existe → generándolo con npm install"
+            npm install
+            echo "package-lock.json generado en este run"
+          fi
 
       - name: Login en Expo / EAS
         run: eas login --token ${{ secrets.EXPO_TOKEN }}
@@ -41,4 +49,4 @@ jobs:
             --no-wait
 
       - name: Build lanzado
-        run: echo "¡AAB en camino! Revisá el link en los logs o en https://expo.dev"
+        run: echo "¡AAB en camino! Revisá https://expo.dev"
