@@ -16,24 +16,19 @@ jobs:
       - name: Checkout código
         uses: actions/checkout@v4
 
-      - name: Setup Node.js (Node 20 + npm 10)
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          # cache desactivado → más simple, más estable, cero dramas
 
       - name: Instalar Expo y EAS CLI
         run: npm install -g expo-cli eas-cli
 
-      - name: Instalar dependencias (modo bruto y efectivo)
+      - name: Instalar dependencias (modo definitivo)
         run: |
-          echo "Borrando cualquier rastro del package-lock maldito..."
           rm -f package-lock.json
-          
-          echo "Instalando todo desde cero con lockfile fresco..."
           npm install
-          
-          echo "Dependencias instaladas. Punto final."
 
       - name: Login Expo / EAS
         run: eas login --token ${{ secrets.EXPO_TOKEN }}
@@ -41,5 +36,5 @@ jobs:
       - name: Build Android AAB
         run: eas build --platform android --profile production --non-interactive --no-wait
 
-      - name: ¡LISTO!
-        run: echo "Build lanzado. Ya puedes ir a tomar algo. Se acabó la pesadilla."
+      - name: ¡GANAMOS!
+        run: echo "Build lanzado. Andá a festejar, campeón."
