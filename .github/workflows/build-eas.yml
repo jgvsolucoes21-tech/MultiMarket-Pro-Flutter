@@ -8,6 +8,10 @@ on:
 jobs:
   build-android:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: react-native-app     # ← AQUÍ ESTÁ LA MAGIA
+
     steps:
       - name: Checkout código
         uses: actions/checkout@v4
@@ -16,19 +20,20 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'               # o 'yarn' si usas yarn
+          cache: 'npm'
+          cache-dependency-path: react-native-app/package-lock.json
 
-      - name: Instalar Expo y EAS CLI global
+      - name: Instalar Expo y EAS CLI (global)
         run: npm install -g expo-cli eas-cli
 
       - name: Instalar dependencias del proyecto
         run: npm ci
-        # si usás yarn → yarn install --frozen-lockfile
+        # si usas yarn → yarn install --frozen-lockfile
 
-      - name: Login en Expo/EAS
+      - name: Login en Expo / EAS
         run: eas login --token ${{ secrets.EXPO_TOKEN }}
 
-      - name: Build AAB de producción
+      - name: Lanzar build AAB de producción
         run: |
           eas build \
             --platform android \
@@ -36,5 +41,5 @@ jobs:
             --non-interactive \
             --no-wait
 
-      - name: Mensaje final
-        run: echo "¡Build lanzado! Revisá el progreso en https://expo.dev/accounts/jgvsolucoes2/projects/MultiMarketPro/builds"
+      - name: Build lanzado
+        run: echo "¡AAB en camino! Revisá el link en los logs o en https://expo.dev"
