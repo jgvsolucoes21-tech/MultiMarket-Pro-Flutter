@@ -1,4 +1,4 @@
-name: Build & Submit Android (EAS)
+name: Build Android AAB (Gradle)
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-android:
+  build:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -20,19 +20,32 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'npm'
 
       - name: Instalar dependencias
         run: npm install
 
-      - name: Login automático en Expo/EAS
-        uses: expo/expo-github-action@v8
+      - name: Cache Gradle
+        uses: actions/cache@v4
         with:
-          expo-version: latest
-          eas-version: latest
-          token: ${{ secrets.EXPO_TOKEN }}
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: \( {{ runner.os }}-gradle- \){{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
-      - name: Build Android AAB
-        run: eas build --platform android --profile production --non-interactive --no-wait
+      - name: Hacer AAB de producción
+        run: |
+          cd android
+          chmod +x ./gradlew
+          ./gradlew bundleRelease --no-daemon
+
+      - name: Subir el AAB como artefacto
+        uses: actions/upload-artifact@v4
+        with:
+          name: MultiMarket-Pro-aab
+          path: react-native-app/android/app/build/outputs/bundle/release/app-release.aab
 
       - name: ÉXITO
-        run: echo "¡AAB lanzado! Revisá expo.dev → https://expo.dev/accounts/TU_USUARIO/projects/multimarket-pro/builds"
+        run: echo "¡AAB GENERADO! Descargalo desde Artifacts arriba ↑"
