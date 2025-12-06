@@ -9,8 +9,8 @@ jobs:
   build-android:
     runs-on: ubuntu-latest
     defaults:
-      run:
-        working-directory: react-native-app     # ← AQUÍ ESTÁ LA MAGIA
+      run: 
+        working-directory: react-native-app
 
     steps:
       - name: Checkout código
@@ -26,9 +26,16 @@ jobs:
       - name: Instalar Expo y EAS CLI (global)
         run: npm install -g expo-cli eas-cli
 
-      - name: Instalar dependencias del proyecto
-        run: npm ci
-        # si usas yarn → yarn install --frozen-lockfile
+      - name: Instalar dependencias del proyecto (con fallback)
+        run: |
+          if [ -f package-lock.json ]; then
+            echo "package-lock.json encontrado → npm ci"
+            npm ci
+          else
+            echo "No hay package-lock.json → npm install (y generamos lock)"
+            npm install
+            # Opcional: commitear el lock generado en un futuro PR automático
+          fi
 
       - name: Login en Expo / EAS
         run: eas login --token ${{ secrets.EXPO_TOKEN }}
@@ -42,4 +49,4 @@ jobs:
             --no-wait
 
       - name: Build lanzado
-        run: echo "¡AAB en camino! Revisá el link en los logs o en https://expo.dev"
+        run: echo "¡AAB en camino! Revisá https://expo.dev/accounts/[tu-usuario]/projects/[tu-proyecto]/builds"
