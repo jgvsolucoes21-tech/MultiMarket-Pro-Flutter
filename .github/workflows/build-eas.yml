@@ -26,27 +26,22 @@ jobs:
       - name: Instalar Expo y EAS CLI
         run: npm install -g expo-cli eas-cli
 
-      - name: Asegurar package-lock.json + instalar dependencias
+      - name: Instalar dependencias (100% infalible)
         run: |
-          if [ -f package-lock.json ]; then
-            echo "package-lock.json encontrado → npm ci"
-            npm ci
-          else
-            echo "package-lock.json NO existe → generándolo con npm install"
-            npm install
-            echo "package-lock.json generado en este run"
+          if [ ! -s package-lock.json ] || ! grep -q '"lockfileVersion"' package-lock.json; then
+            echo "package-lock.json ausente/vacío/corrupto → regenerando uno válido"
+            rm -f package-lock.json
+            npm install --package-lock-only
           fi
+          echo "Lockfile OK → npm ci"
+          npm ci
 
       - name: Login en Expo / EAS
         run: eas login --token ${{ secrets.EXPO_TOKEN }}
 
       - name: Lanzar build AAB de producción
         run: |
-          eas build \
-            --platform android \
-            --profile production \
-            --non-interactive \
-            --no-wait
+          eas build --platform android --profile production --non-interactive --no-wait
 
       - name: Build lanzado
         run: echo "¡AAB en camino! Revisá https://expo.dev"
