@@ -1,4 +1,4 @@
-name: Build Android AAB (Gradle)
+name: Build Android AAB
 
 on:
   push:
@@ -10,30 +10,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout código
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Instalar dependencias
-        run: |
-          cd react-native-app
-          npm install
+      - run: cd react-native-app && npm install
 
-      - name: Generar AAB de producción
-        run: |
-          cd react-native-app/Android
-          chmod +x gradlew
-          ./gradlew bundleRelease --no-daemon
+      - run: cd react-native-app/Android && ./gradlew bundleRelease --no-daemon
 
-      - name: Subir AAB como artefacto
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: MultiMarket-Pro-aab
           path: react-native-app/Android/app/build/outputs/bundle/release/app-release.aab
-
-      - name: ¡ÉXITO TOTAL!
-        run: echo "¡AAB LISTO! Descárgalo desde Artifacts arriba"
