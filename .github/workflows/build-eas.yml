@@ -23,10 +23,11 @@ jobs:
           cd react-native-app
           npm install
 
-      - name: Fix gradlew line endings + generar AAB
+      - name: Fix gradlew + generar AAB
         run: |
           cd react-native-app/Android
-          sed -i 's/\r$//' gradlew          # ← ESTA LÍNEA arregla el CRLF
+          sudo apt-get install -y dos2unix
+          dos2unix gradlew
           chmod +x gradlew
           ./gradlew bundleRelease --no-daemon
 
@@ -34,7 +35,3 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: MultiMarket-Pro-aab
-          path: react-native-app/Android/app/build/outputs/bundle/release/app-release.aab
-
-      - name: ¡ÉXITO TOTAL!
-        run: echo "¡AAB GENERADO! Descárgalo desde Artifacts"
