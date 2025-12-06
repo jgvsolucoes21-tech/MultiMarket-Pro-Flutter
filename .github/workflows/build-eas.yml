@@ -16,15 +16,21 @@ jobs:
         with:
           node-version: 20
 
-      - run: cd react-native-app && npm install
-
-      - name: Build AAB
+      - name: Instalar dependencias
         run: |
-          cd react-native-app/Android
+          cd react-native-app
+          npm install
+
+      - name: Build AAB (con ruta 100 % segura)
+        run: |
+          cd react-native-app
+          cd Android
+          pwd
+          ls -la gradlew
           chmod +x gradlew
           ./gradlew bundleRelease --no-daemon
 
       - uses: actions/upload-artifact@v4
         with:
-          name: MultiMarket-Pro-aab
+          name: MultiMarket-Pro.aab
           path: react-native-app/Android/app/build/outputs/bundle/release/app-release.aab
