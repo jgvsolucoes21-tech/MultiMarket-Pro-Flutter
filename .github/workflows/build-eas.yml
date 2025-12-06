@@ -2,9 +2,8 @@ name: Build & Submit Android (EAS)
 
 on:
   push:
-    branches:
-      - main        # cambia a la rama que uses (main, master, prod, etc)
-  workflow_dispatch:  # para que puedas ejecutarlo manual cuando quieras
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   build-android:
@@ -17,19 +16,19 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
+          cache: 'npm'               # o 'yarn' si usas yarn
 
-      - name: Instalar Expo CLI y EAS CLI
+      - name: Instalar Expo y EAS CLI global
         run: npm install -g expo-cli eas-cli
 
-      - name: Instalar dependencias
+      - name: Instalar dependencias del proyecto
         run: npm ci
-        # si usas yarn → yarn install --frozen-lockfile
+        # si usás yarn → yarn install --frozen-lockfile
 
       - name: Login en Expo/EAS
         run: eas login --token ${{ secrets.EXPO_TOKEN }}
 
-      - name: Build AAB Production (Internal Testing)
+      - name: Build AAB de producción
         run: |
           eas build \
             --platform android \
@@ -37,18 +36,5 @@ jobs:
             --non-interactive \
             --no-wait
 
-      # OPCIONAL: Subir automáticamente a Google Play Internal Testing
-      # Descomenta las líneas de abajo si querés que suba solo
-      # - name: Subir a Google Play Internal Testing
-      #   run: |
-      #     eas credentials:upload:android \
-      #       --path ./android/app/upload-keystore.jks \
-      #       --overwrite
-      #     eas build:submit \
-      #       --platform android \
-      #       --type aab \
-      #       --latest \
-      #       --track internal
-
-      - name: Notificación final
-        run: echo "¡Build terminado! Revisa la URL en el log o en https://expo.dev"
+      - name: Mensaje final
+        run: echo "¡Build lanzado! Revisá el progreso en https://expo.dev/accounts/jgvsolucoes2/projects/MultiMarketPro/builds"
