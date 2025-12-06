@@ -1,20 +1,240 @@
-name: Build Android AAB
+#!/bin/sh
 
-on:
-  push:
-    branches: [ main ]
+#
+# Copyright © 2015-2021 los autores originales.
+#
+# Con licencia Apache, versión 2.0 (la "Licencia");
+# no puedes usar este archivo excepto en cumplimiento con la Licencia.
+# Puede obtener una copia de la Licencia en
+#
+# https://www.apache.org/licenses/LICENCIA-2.0
+#
+# A menos que lo exija la ley aplicable o se acuerde por escrito, el software
+# distribuido bajo la Licencia se distribuye "TAL CUAL",
+# SIN GARANTÍAS NI CONDICIONES DE NINGÚN TIPO, ya sean expresas o implícitas.
+# Consulte la Licencia para conocer los permisos que rigen el idioma específico y
+# limitaciones bajo la Licencia.
+#
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - run: cd react-native-app && npm install
-      - run: cd react-native-app/Android && ./gradlew bundleRelease
-      - uses: actions/upload-artifact@v4
-        with:
-          name: app.aab
-          path: react-native-app/Android/app/build/outputs/bundle/release/app-release.aab
+##############################################################################
+#
+# Script de inicio de Gradle para POSIX generado por Gradle.
+#
+# Importante para correr:
+#
+# (1) Necesita un shell compatible con POSIX para ejecutar este script. Si su /bin/sh es
+# no compatible, pero tienes otro shell compatible como ksh o
+# bash, luego para ejecutar este script, escriba ese nombre de shell antes de todo
+# línea de comando, como:
+#
+# ksh Gradle
+#
+# Busybox y shells reducidos similares NO funcionarán, porque este script
+# requiere todas estas características del shell POSIX:
+# * funciones;
+# * expansiones «$var», «${var}», «${var:-default}», «${var+SET}»,
+# «${var#prefix}», «${var%suffix}» y «$( cmd )»;
+# * comandos compuestos que tienen un estado de salida comprobable, especialmente «case»;
+# * varios comandos integrados, incluidos «comando», «establecer» y «ulimit».
+#
+# Importante para aplicar parches:
+#
+# (2) Este script apunta a cualquier shell POSIX, por lo que evita las extensiones proporcionadas
+# por Bash, Ksh, etc; en particular se evitan las matrices.
+#
+# La práctica "tradicional" de empaquetar múltiples parámetros en un
+# Las cadenas separadas por espacios son una fuente bien documentada de errores y problemas de seguridad.
+# problemas, por lo que esto se evita (en su mayoría) mediante la acumulación progresiva
+# opciones en "$@" y eventualmente pasarlas a Java.
+#
+# Donde se encuentran las variables de entorno heredadas (DEFAULT_JVM_OPTS, JAVA_OPTS,
+# y GRADLE_OPTS) dependen de la división de palabras, esto se realiza explícitamente;
+# Consulte los comentarios en línea para obtener más detalles.
+#
+# Hay ajustes para sistemas operativos específicos como AIX, CygWin,
+# Darwin, MinGW y NonStop.
+#
+# (3) Este script se genera a partir de la plantilla Groovy
+# https://github.com/gradle/gradle/blob/master/subprojects/plugins/src/main/resources/org/gradle/api/internal/plugins/unixStartScript.txt
+# dentro del proyecto Gradle.
+#
+# Puedes encontrar Gradle en https://github.com/gradle/gradle/.
+#
+##############################################################################
+
+# Intentar establecer APP_HOME
+
+# Resolver enlaces: $0 puede ser un enlace
+ruta_de_aplicación=$0
+
+# Necesita esto para enlaces simbólicos en cadena.
+mientras
+    APP_HOME=${app_path%"${app_path##*/}"} # deja una / final; vacía si no hay una ruta principal
+    [ -h "$ruta_de_aplicación" ]
+hacer
+    ls=$( ls -ld "$ruta_de_aplicación")
+    enlace=${ls#*' -> '}
+    caso $link en #(
+      /*) ruta_de_aplicación=$enlace ;; #(
+      *) ruta_de_aplicación=$APP_HOME$link ;;
+    esac
+hecho
+
+APP_HOME=$( cd "${APP_HOME:-./}" && pwd -P ) || salir
+
+APP_NAME="Gradle"
+NOMBRE BASE DE LA APLICACIÓN=${0##*/}
+
+# Agregue aquí las opciones predeterminadas de la JVM. También puede usar JAVA_OPTS y GRADLE_OPTS para pasar opciones de la JVM a este script.
+OPCIONES_JVM_PREDETERMINADAS='-Dfile.encoding=UTF-8 "-Xmx64m" "-Xms64m"'
+
+# Utilice el máximo disponible o configure MAX_FD != -1 para usar ese valor.
+MAX_FD=máximo
+
+advertir () {
+    eco "$*"
+} >&2
+
+morir () {
+    eco
+    eco "$*"
+    eco
+    salida 1
+} >&2
+
+# Soporte específico del sistema operativo (debe ser 'verdadero' o 'falso').
+cygwin=falso
+msys=falso
+darwin=falso
+sin parar=falso
+caso "$( uname )" en #(
+  CYGWIN* ) cygwin=verdadero ;; #(
+  Darwin* ) darwin=verdadero ;; #(
+  MSYS* | MINGW* ) msys=verdadero ;; #(
+  SIN PARAR* ) sin parar=verdadero ;;
+esac
+
+RUTA DE CLASE=$APP_HOME/gradle/wrapper/gradle-wrapper.jar
+
+
+# Determine el comando Java a utilizar para iniciar la JVM.
+si [ -n "$JAVA_HOME" ] ; entonces
+    si [ -x "$JAVA_HOME/jre/sh/java" ] ; entonces
+        # El JDK de IBM en AIX utiliza ubicaciones extrañas para los ejecutables
+        JAVACMD=$JAVA_HOME/jre/sh/java
+    demás
+        JAVACMD=$JAVA_HOME/bin/java
+    fi
+    si [ ! -x "$JAVACMD" ] ; entonces
+        el error "ERROR: JAVA_HOME está configurado en un directorio no válido: $JAVA_HOME
+
+Configure la variable JAVA_HOME en su entorno para que coincida con la
+ubicación de su instalación de Java."
+    fi
+demás
+    JAVACMD=java
+    que java >/dev/null 2>&1 || el error "ERROR: JAVA_HOME no está configurado y no se pudo encontrar ningún comando 'java' en su PATH.
+
+Configure la variable JAVA_HOME en su entorno para que coincida con la
+ubicación de su instalación de Java."
+fi
+
+# Aumente el máximo de descriptores de archivos si podemos.
+si ! "$cygwin" && ! "$darwin" && ! "$nonstop" ; entonces
+    caso $MAX_FD en #(
+      máximo*)
+        MAX_FD=$( ulimit -H -n ) ||
+            Advertencia: "No se pudo consultar el límite máximo de descriptores de archivo"
+    esac
+    caso $MAX_FD en #(
+      '' | suave) :;; #(
+      *)
+        ulimit -n "$MAX_FD" ||
+            Advertencia: "No se pudo establecer el límite máximo del descriptor de archivo en $MAX_FD"
+    esac
+fi
+
+# Recopila todos los argumentos para el comando java, apilándolos en orden inverso:
+# * args desde la línea de comando
+# * el nombre de la clase principal
+# * -ruta de clase
+# * -D...configuración del nombre de la aplicación
+# * --module-path (solo si es necesario)
+# * Variables de entorno DEFAULT_JVM_OPTS, JAVA_OPTS y GRADLE_OPTS.
+
+# Para Cygwin o MSYS, cambie las rutas al formato de Windows antes de ejecutar Java
+si "$cygwin" || "$msys" ; entonces
+    APP_HOME=$( cygpath --path --mixed "$APP_HOME" )
+    RUTA DE CLASES=$( cygpath --path --mixed "$RUTA DE CLASES" )
+
+    JAVACMD=$( cygpath --unix "$JAVACMD" )
+
+    # Ahora convertimos los argumentos - kludge para limitarnos a /bin/sh
+    para arg hacer
+        si
+            caso $arg en #(
+              -*) falso ;; # no te metas con las opciones #(
+              /?*) t=${arg#/} t=/${t%%/*} # parece una ruta de archivo POSIX
+                    [ -e "$t" ] ;; #(
+              *) FALSO ;;
+            esac
+        entonces
+            arg=$( cygpath --path --ignore --mixed "$arg" )
+        fi
+        # Haga girar la lista de argumentos exactamente tantas veces como el número de
+        # args, por lo que cada arg termina nuevamente en la posición donde comenzó, pero
+        # posiblemente modificado.
+        #
+        # NB: un bucle `for` captura su lista de iteraciones antes de comenzar, por lo que
+        # cambiar los parámetros posicionales aquí no afecta ni el número de
+        # iteraciones, ni los valores presentados en `arg`.
+        shift # eliminar argumento antiguo
+        establecer -- "$@" "$arg" # insertar argumento de reemplazo
+    hecho
+fi
+
+# Recopila todos los argumentos para el comando java;
+# * $DEFAULT_JVM_OPTS, $JAVA_OPTS y $GRADLE_OPTS pueden contener fragmentos de
+# script de shell que incluye comillas y sustituciones de variables, así que colóquelas en
+# comillas dobles para asegurarse de que se vuelvan a expandir; y
+# * coloque todo lo demás entre comillas simples, para que no se vuelva a expandir.
+
+colocar -- \
+        "-Dorg.gradle.appname=$APP_BASE_NAME" \
+        -classpath "$CLASSPATH" \
+        org.gradle.wrapper.GradleWrapperMain \
+        "$@"
+
+# Detenerse cuando "xargs" no esté disponible.
+si ! comando -v xargs >/dev/null 2>&1
+entonces
+    "xargs no está disponible"
+fi
+
+# Utilice "xargs" para analizar argumentos entre comillas.
+#
+# Con -n1 se genera un argumento por línea, con las comillas y las barras invertidas eliminadas.
+#
+# En Bash podríamos simplemente ir:
+#
+# readarray ARGS < <( xargs -n1 <<<"$var") &&
+# establecer -- "${ARGS[@]}" "$@"
+#
+# pero el shell POSIX no tiene matrices ni sustitución de comandos, por lo que en su lugar usamos
+# postprocesar cada argumento (como una línea de entrada a sed) para escapar con barra invertida cualquier
+# carácter que podría ser un metacarácter de shell, luego use eval para revertir
+# ese proceso (manteniendo la separación entre argumentos), y envuelve
+# todo como una única declaración "set".
+#
+# Por supuesto, esto se romperá si alguna de estas variables contiene una nueva línea o
+# una cita sin igual.
+#
+
+eval "conjunto -- $(
+        printf '%s\n' "$OPCIONES_JVM_PREDETERMINADAS $OPCIONES_JAVA $OPCIONES_GRADLE" |
+        xargs-n1 |
+        sed ' s~[^-[:alnum:]+,./:=@_]~\\&~g; ' |
+        tr '\n' ' '
+    )" '"$@"'
+
+ejecutar "$JAVACMD" "$@"
