@@ -18,7 +18,11 @@ jobs:
 
       - run: cd react-native-app && npm install
 
-      - run: cd react-native-app/Android && ./gradlew bundleRelease --no-daemon
+      - name: Build AAB
+        run: |
+          cd react-native-app/Android
+          chmod +x gradlew
+          ./gradlew bundleRelease --no-daemon
 
       - uses: actions/upload-artifact@v4
         with:
