@@ -23,10 +23,11 @@ jobs:
           cd react-native-app
           npm install
 
-      - name: Generar AAB de producción
+      - name: Fix gradlew line endings + generar AAB
         run: |
-          cd react-native-app/Android   # ← A mayúscula, como en tu repo
-          chmod +x ./gradlew
+          cd react-native-app/Android
+          sed -i 's/\r$//' gradlew          # ← ESTA LÍNEA arregla el CRLF
+          chmod +x gradlew
           ./gradlew bundleRelease --no-daemon
 
       - name: Subir AAB como artefacto
@@ -36,4 +37,4 @@ jobs:
           path: react-native-app/Android/app/build/outputs/bundle/release/app-release.aab
 
       - name: ¡ÉXITO TOTAL!
-        run: echo "¡AAB LISTO! Descárgalo desde Artifacts arriba"
+        run: echo "¡AAB GENERADO! Descárgalo desde Artifacts"
