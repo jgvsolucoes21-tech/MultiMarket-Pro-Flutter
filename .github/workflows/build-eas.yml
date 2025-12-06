@@ -20,7 +20,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          # cache desactivado → cero warnings, cero problemas
 
       - name: Instalar dependencias
         run: npm install
@@ -31,9 +30,8 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: \( {{ runner.os }}-gradle- \){{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+          key: \( {{ runner.os }}-gradle- \){{ hashFiles('android/**/gradle-wrapper.properties', 'android/**/build.gradle*') }}
+          restore-keys: ${{ runner.os }}-gradle-
 
       - name: Generar AAB de producción
         run: |
@@ -48,4 +46,4 @@ jobs:
           path: react-native-app/android/app/build/outputs/bundle/release/app-release.aab
 
       - name: ¡ÉXITO TOTAL!
-        run: echo "¡AAB LISTO! Descárgalo de Artifacts ↑↑↑"
+        run: echo "¡AAB LISTO! Descárgalo de Artifacts"
