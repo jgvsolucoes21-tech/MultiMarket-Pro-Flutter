@@ -21,21 +21,18 @@ jobs:
         with:
           node-version: 20
 
-      - name: Instalar Expo y EAS CLI
-        run: npm install -g expo-cli eas-cli
-
       - name: Instalar dependencias
-        run: |
-          rm -f package-lock.json
-          npm install
+        run: npm install
 
-      - name: Login Expo / EAS
-        run: eas login --non-interactive
-        env:
-          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+      - name: Login automático en Expo/EAS
+        uses: expo/expo-github-action@v8
+        with:
+          expo-version: latest
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
 
       - name: Build Android AAB
         run: eas build --platform android --profile production --non-interactive --no-wait
 
-      - name: ¡TERMINAMOS!
-        run: echo "Build lanzado. Andá a dormir tranquilo, crack."
+      - name: ÉXITO
+        run: echo "¡AAB lanzado! Revisá expo.dev → https://expo.dev/accounts/TU_USUARIO/projects/multimarket-pro/builds"
